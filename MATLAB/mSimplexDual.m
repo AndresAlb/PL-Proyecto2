@@ -15,7 +15,7 @@ function [xo, zo, ban, iter, lambda0] = mSimplexDual(A, b, c)
 %       ban ... indica casos: 
 %           -1 ... si el conjunto factible es vacio 
 %           0 ... si se encontro una solucion optima 
-%           1 ... si la funci´on objectivo no es acotada. 
+%           1 ... si la funcion objectivo no es acotada. 
 %       iter ... numero de iteraciones que hizo el metodo 
 %       lambda0 ... Solucion del problema dual 
 
