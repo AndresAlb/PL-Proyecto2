@@ -1,4 +1,4 @@
-function [x0, z0, ban, iter] = mSimplexMax(A, b, c, imprimirPasos) 
+function [x0, z0, ban, iter, sensinfo] = mSimplexMax(A, b, c, imprimirPasos) 
 
 % Esta funcion realiza la Fase II del Metodo Simplex para problemas
 % que tienen la siguiente forma
@@ -118,13 +118,102 @@ function [x0, z0, ban, iter] = mSimplexMax(A, b, c, imprimirPasos)
         z0 = -c*x0;
         
         % Solo devolvemos los valores de las variables originales
-        x0 = x0(1:n); 
+        x0 = x0(1:n);
+        
+        % Calculamos los precios sombra y los intervalos de
+        % variacion para el vector c y el vector b
+        sensinfo.lambda = lambda;
+        sensinfo.gammas = calcularGammas(A(:, N), rN, B, N);
+        sensinfo.betas = calcularBetas(h, A(:, B));
+        
     else
-        [x0, z0] = deal( [], [] );
+        [x0, z0, sensinfo] = deal( [], [], [] );
     end
     
     return;
   
+end
+
+function [gammas] = calcularGammas(H, r, B, N)
+
+    n = length(N);
+    gammas = Inf(n, 2);
+    gammas(:,1) = -gammas(:,1);
+
+    for var = 1:n
+
+        if(ismember(var, B))
+
+            % La variable es basica. 
+
+            % Determinamos la posicion en la que se encuentra la variable. 
+            % Esto nos dice la fila de H que tendremos que recorrer
+            i = (B == var);
+
+            for j = 1:n % Recorremos las columnas de H
+
+                if H(i, j) ~= 0 
+
+                    if H(i, j) > 0
+                        % En este caso el cociente es negativo
+                        gammas(var,1) = max( gammas(var,1), r(j)/H(i, j) );
+                    else 
+                        % En este caso el cociente es positivo
+                        gammas(var,2) = min( gammas(var,2), r(j)/H(i, j) );
+                    end
+
+                end
+
+            end
+
+        else
+
+            % La variable es no-basica, asi que solo necesitamos
+            % que gamma sea menor o igual que la entrada 
+            % correspondiente del vector r
+            i = (N == var);
+            gammas(var, 2) = r(i);
+
+        end
+
+    end
+
+    return;
+    
+end
+
+function [betas] = calcularBetas(h, AB)
+
+    m = length(AB); % Numero de filas de AB
+    
+    betas = Inf(m, 2);
+    betas(:,1) = -betas(:,1);
+    
+    % Invertimos la matriz AB
+    InvAB = AB\eye(m);
+
+    for j = 1:m % Recorremos las columnas de InvAB
+        
+        for i = 1:m % Recorremos las filas de InvAB
+            
+            if InvAB(i, j) ~= 0
+                
+                if InvAB(i, j) > 0
+                    
+                    betas(j, 1) = max( betas(j, 1), -h(i)/InvAB(i) );
+                
+                else
+                    
+                    betas(j, 2) = min( betas(j, 2), -h(i)/InvAB(i) );
+                
+                end
+                
+            end
+            
+        end
+        
+    end
+
 end
 
 function imprimirTableau(AB, AN, cB, rN, h, B, N, iter)
