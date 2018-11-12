@@ -140,8 +140,8 @@ function imprimirTableau(AB, AN, cB, rN, h, B, N, iter)
     T(1:m, B) = eye(m);
     T(1:m, N) = AB\AN;
     T(1:m, m+n+1) = h;
-    T(m+1, N) = rN;
-    T(m+1, m+n+1) = cB*h;
+    T(m+1, N) = -rN;
+    T(m+1, m+n+1) = -cB*h;
     
     fprintf("\nVariables basicas:    ");
     disp(B);
