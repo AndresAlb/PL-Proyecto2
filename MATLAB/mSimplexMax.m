@@ -122,8 +122,8 @@ function [x0, z0, ban, iter, sensinfo] = mSimplexMax(A, b, c, imprimirPasos)
         
         % Calculamos los precios sombra y los intervalos de
         % variacion para el vector c y el vector b
-        sensinfo.lambda = lambda;
-        sensinfo.gammas = calcularGammas(A(:, N), rN, B, N);
+        sensinfo.lambda = -lambda;
+        sensinfo.gammas = calcularGammas(m + n, A(:, B)\A(:, N), rN, B, N);
         sensinfo.betas = calcularBetas(h, A(:, B));
         
     else
@@ -134,9 +134,9 @@ function [x0, z0, ban, iter, sensinfo] = mSimplexMax(A, b, c, imprimirPasos)
   
 end
 
-function [gammas] = calcularGammas(H, r, B, N)
+function [gammas] = calcularGammas(n, H, r, B, N)
 
-    n = length(N);
+    [~, hn] = size(H);
     gammas = Inf(n, 2);
     gammas(:,1) = -gammas(:,1);
 
@@ -149,8 +149,9 @@ function [gammas] = calcularGammas(H, r, B, N)
             % Determinamos la posicion en la que se encuentra la variable. 
             % Esto nos dice la fila de H que tendremos que recorrer
             i = (B == var);
+            H(i, :)
 
-            for j = 1:n % Recorremos las columnas de H
+            for j = 1:hn % Recorremos las columnas de H
 
                 if H(i, j) ~= 0 
 
@@ -189,7 +190,7 @@ function [betas] = calcularBetas(h, AB)
     betas = Inf(m, 2);
     betas(:,1) = -betas(:,1);
     
-    % Invertimos la matriz AB
+    % Invertimos la matriz AB con Factorizacion LU
     InvAB = AB\eye(m);
 
     for j = 1:m % Recorremos las columnas de InvAB
