@@ -92,20 +92,33 @@ sensinfo.lambda(3)
 sensinfo.lambda(3)*5
 
 % Ganancias cuando Lidia trabaja hasta 20 horas semanales
-[~, z_20, ~, ~, ~] = mSimplexMax(A, b, c, false);
-z_20
+[~, z_20, ~, ~, ~] = mSimplexMax(A, b, c, false)
 
 % Ganancias cuando Lidia trabaja hasta 25 horas semanales
 b(3) = 25;
-[~, z_25, ~, ~, ~] = mSimplexMax(A, b, c, false);
-z_25
+[~, z_25, ~, ~, ~] = mSimplexMax(A, b, c, false)
 
-% Cambio en las ganancias
+% Cambio en las ganancias totales optimas
 z_25 - z_20
 
 % No es valido utilizar los precios sombra si cambian las horas
-% de disponibilidad de ambos porque cambian la solucion optima
-[x0, z0, ~, ~, ~] = mSimplexMax(A, b, c, false);
+% de disponibilidad de ambos porque altera la solucion optima
+
+% Precios sombra de David y Lidia y cambio estimado en la  
+% ganancia total optima mediante multiplicacion de los precios
+% sombra por el cambio en sus horas de disponibilidad
+sensinfo.lambda([1 3])
+dot(sensinfo.lambda([1 3]), [-5 5])
+
+% Ganancias con b = [40, 40, 20]
+[~, z0, ~, ~, ~] = mSimplexMax(A, b, c, false)
+
+% Ganancias despues del cambio en las horas de David y Lidia
+b(1) = b(1) - 5; b(3) = b(3) + 5;
+[~, z1, ~, ~, ~] = mSimplexMax(A, b, c, false)
+
+% Cambio en las ganancias totales optimas
+z1 - z0
 
 
 
