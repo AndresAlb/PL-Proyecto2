@@ -123,7 +123,7 @@ function [x0, z0, ban, iter, sensinfo] = mSimplexMax(A, b, c, imprimirPasos)
         % Calculamos los precios sombra y los intervalos de
         % variacion para el vector c y el vector b
         sensinfo.lambda = -lambda;
-        sensinfo.gammas = calcularGammas(m + n, A(:, B)\A(:, N), rN, B, N);
+        sensinfo.gammas = calcularGammas(n, A(:, B)\A(:, N), rN, B, N);
         sensinfo.betas = calcularBetas(h, A(:, B));
         
     else
@@ -149,7 +149,6 @@ function [gammas] = calcularGammas(n, H, r, B, N)
             % Determinamos la posicion en la que se encuentra la variable. 
             % Esto nos dice la fila de H que tendremos que recorrer
             i = (B == var);
-            H(i, :)
 
             for j = 1:hn % Recorremos las columnas de H
 
@@ -201,11 +200,11 @@ function [betas] = calcularBetas(h, AB)
                 
                 if InvAB(i, j) > 0
                     
-                    betas(j, 1) = max( betas(j, 1), -h(i)/InvAB(i) );
+                    betas(j, 1) = max( betas(j, 1), -h(i)/InvAB(i, j) );
                 
                 else
                     
-                    betas(j, 2) = min( betas(j, 2), -h(i)/InvAB(i) );
+                    betas(j, 2) = min( betas(j, 2), -h(i)/InvAB(i, j) );
                 
                 end
                 
