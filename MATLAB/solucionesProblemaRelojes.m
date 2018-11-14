@@ -4,7 +4,7 @@
 
 % Declaramos el problema y resolvemos mostrando el tableau
 A = [6 4; 8 4; 3 3]; b = [40; 40; 20]; c = [300; 200];
-[x0, z0, ban, iter, sensinfo] = mSimplexMax(A, b, c, true)
+[x0, z0, ban, iter, sensinfo] = mSimplexMax(A, b, c, false)
 sensinfo.lambda
 sensinfo.gammas
 sensinfo.betas
@@ -74,11 +74,35 @@ for i = 15:2:25
     fprintf('La ganancia optima es %\n', z0);
 end
 
-% P8. Si es valido utilizar los precios sombra. Lo demostramos
-% a continuacion
-fprintf('El precio sombra de Lidia es %d', sensinfo.lambda(3));
-fprintf(['El efecto sobre la ganancia del aumento en las horas ',... 
-    'de disponibilidad de Lidia es %d'], sensinfo.lambda(3)*5);
+b = [40; 40; 20];
+
+% P8. Si es valido utilizar los precios sombra si solo cambian las
+% horas de disponibilidad de Lidia. Lo demostramos a continuacion
+
+% Precio sombra de Lidia y cambio en las ganancias por el aumento
+% en sus horas de disponibilidad semanal
+sensinfo.lambda(3)
+sensinfo.lambda(3)*5
+
+% Ganancias cuando Lidia trabaja hasta 20 horas semanales
+[~, z_20, ~, ~, ~] = mSimplexMax(A, b, c, false);
+z_20
+
+% Ganancias cuando Lidia trabaja hasta 25 horas semanales
+b(3) = 25;
+[~, z_25, ~, ~, ~] = mSimplexMax(A, b, c, false);
+z_25
+
+% Cambio en las ganancias
+z_25 - z_20
+
+% No es valido utilizar los precios sombra si cambian las horas
+% de disponibilidad de ambos porque cambian la solucion optima
+[x0, z0, ~, ~, ~] = mSimplexMax(A, b, c, false);
+
+
+
+
 
 
 
