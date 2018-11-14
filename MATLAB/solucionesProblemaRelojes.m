@@ -43,7 +43,7 @@ b = [40; 40; 25];
 % P4. David puede trabajar menos sin afectar la solucion optima.
 % Ya tenemos guardados los intervalos de sensibilidad para b de
 % antes, asi que solo los volvemos a imprimir 
-disp(sensinfo.betas(1))
+sensinfo.betas(1, :)
 
 b = [40; 40; 20];
 
@@ -52,26 +52,33 @@ for i = 35:2:45
     b(1) = i;
     [x0, z0, ~, ~, ~] = mSimplexMax(A, b, c, false);
     fprintf('\nHoras de disponibilidad de David: %d \n', i);
-    fprintf('La solucion optima es %d\n', x0);
-    fprintf('La ganancia optima es %\n', z0);
+    fprintf('La solucion optima es x0 = (%s, %s)\n',... 
+        strtrim(rats(x0(1))), strtrim(rats(x0(2))));
+    fprintf('La ganancia optima es %s\n', strtrim(rats(z0)));
 end
+
+b = [40; 40; 20];
 
 % P6
 for i = 35:2:45
     b(2) = i;
     [x0, z0, ~, ~, ~] = mSimplexMax(A, b, c, false);
     fprintf('\nHoras de disponibilidad de Diana: %d \n', i);
-    fprintf('La solucion optima es %d\n', x0);
-    fprintf('La ganancia optima es %\n', z0);
+    fprintf('La solucion optima es x0 = (%s, %s)\n',... 
+        strtrim(rats(x0(1))), strtrim(rats(x0(2))));
+    fprintf('La ganancia optima es %s\n', strtrim(rats(z0)));
 end
+
+b = [40; 40; 20];
 
 % P7
 for i = 15:2:25
-    b(1) = i;
+    b(3) = i;
     [x0, z0, ~, ~, ~] = mSimplexMax(A, b, c, false);
     fprintf('\nHoras de disponibilidad de Lidia: %d \n', i);
-    fprintf('La solucion optima es %d\n', x0);
-    fprintf('La ganancia optima es %\n', z0);
+    fprintf('La solucion optima es x0 = (%s, %s)\n',... 
+        strtrim(rats(x0(1))), strtrim(rats(x0(2))));
+    fprintf('La ganancia optima es %s\n', strtrim(rats(z0)));
 end
 
 b = [40; 40; 20];
