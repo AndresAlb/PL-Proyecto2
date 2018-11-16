@@ -1,6 +1,6 @@
 function [x0, z0, ban, iter, lambda0] = mSimplexDual(A, b, c, imprimirPasos) 
 
-% Esta funcion realiza el Metodo Simplex Dual para problemas primales
+% Esta funcion realiza el Metodo Simplex Dual para problemas (duales)
 % que tienen la siguiente forma:
 %
 %               minimizar   c'x 
@@ -10,8 +10,8 @@ function [x0, z0, ban, iter, lambda0] = mSimplexDual(A, b, c, imprimirPasos)
 %       b ... column vector with as many rows as A 
 %       c ... column vector with as many columns as A 
 % 
-% Out:  xo ... SFB optima del problema 
-%       zo ... valor optimo del problema 
+% Out:  x0 ... SFB optima del problema 
+%       z0 ... valor optimo del problema 
 %       ban ... indica casos: 
 %           -1 ... si el conjunto factible es vacio 
 %           0 ... si se encontro una solucion optima 
@@ -21,28 +21,23 @@ function [x0, z0, ban, iter, lambda0] = mSimplexDual(A, b, c, imprimirPasos)
 
     format rat; % MATLAB imprime fracciones en vez de decimales
     
+    ban = 0;
     iter = 0;
     [x0, z0, lambda0] = deal( [], [], [] );
 
     % 1 Definicion de las variables iniciales
     
     [m, n] = size(A); % m variables basicas
-    ban = 0;
     [N, B, c, A] = deal( 1:n, (n+1):(m+n), [c' zeros(1,m)], [-A eye(m)] );
     [lambda, h] = deal( c(B), -b );
     rN = lambda*A(:, N) - c(N); 
     Id = eye(m); % matriz identidad
     
-    % Revisamos si el conjunto factible del problema dual
-    % es vacio
+    % Revisamos si el problema es no acotado
     if any(c < 0)
         
-        % Si el conjunto factible  del problema es vacio, 
-        % el Metodo Simplex dual no tendra opcion mas que escoger 
-        % un punto que no cumpla la restriccion de no-negatividad 
-        % por lo que algun valor de c es negativo. En teoria, no 
-        % deberiamos tener este caso porque la documentacion 
-        % pide c >= 0.
+        % Si c < 0, entonces el primal de este problema será
+        % no-factible. 
         
         if imprimirPasos
             fprintf("\n\nConjunto factible vacio\n");
@@ -116,13 +111,12 @@ function [x0, z0, ban, iter, lambda0] = mSimplexDual(A, b, c, imprimirPasos)
     
     if ban == 0
         
-        x0 = zeros(m+n, 1);
+        x0 = zeros(n + m, 1);
         x0(B) = h;
-        z0 = c*x0;
+        lambda0 = -lambda';
         
         % Solo devolvemos los valores de las variables originales
         x0 = x0(1:n);
-        lambda0 = lambda;
         
     end
     
