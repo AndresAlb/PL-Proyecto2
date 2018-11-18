@@ -1,3 +1,4 @@
+
 % Este script grafica el conjunto factible del problema de los relojes
 
 x = 0:0.5:12;

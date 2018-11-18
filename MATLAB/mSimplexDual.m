@@ -114,6 +114,7 @@ function [x0, z0, ban, iter, lambda0] = mSimplexDual(A, b, c, imprimirPasos)
         x0 = zeros(n + m, 1);
         x0(B) = h;
         lambda0 = -lambda';
+        z0 = c*x0;
         
         % Solo devolvemos los valores de las variables originales
         x0 = x0(1:n);
