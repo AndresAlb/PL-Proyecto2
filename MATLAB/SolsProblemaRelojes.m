@@ -1,6 +1,8 @@
 
-% Este script resuelve las preguntas del problema de los relojes
-% usando la funcion mSimplexMax
+% Este script resuelve las preguntas de las actividades 1 y 3 del 
+% proyecto usando las funciones mSimplexMax y mSimplexDual
+
+fprintf('\n\nActividad 1\n\n')
 
 % Declaramos el problema y resolvemos mostrando el tableau
 A = [6 4; 8 4; 3 3]; b = [40; 40; 20]; c = [300; 200];
@@ -154,3 +156,8 @@ b(1) = b(1) - 5; b(3) = b(3) + 5;
 % Cambio en las ganancias totales optimas
 fprintf(['\nEl cambio en la ganancia total es',...
     ' z1 - z0 = %s.\n\n'], strtrim(rats(z1 - z0)));
+
+fprintf('\nActividad 3\n\n');
+
+A = [6 8 3; 4 4 3]; b = [300; 200]; c = [40; 40; 20]; 
+[x0, z0, ban, iter, lambda0] = mSimplexDual(A, b, c, false)
